@@ -137,6 +137,7 @@ class LivewireDatatable extends Component
         'minWidth',
         'maxWidth',
         'preventExport',
+        'headerAttributes'
     ];
 
     /**

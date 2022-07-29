@@ -39,6 +39,7 @@ class Column
     public $minWidth;
     public $maxWidth;
     public $exportCallback;
+    public $headerAttributes = [];
 
     /**
      * @var bool should the sum of all summarizable cells in this column be
@@ -547,6 +548,12 @@ class Column
 
         $this->maxWidth = $maxWidth;
 
+        return $this;
+    }
+
+    public function headerAttributes($attributes)
+    {
+        $this->headerAttributes = $attributes;
         return $this;
     }
 }

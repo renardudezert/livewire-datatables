@@ -213,6 +213,7 @@ class ComplexDemoTable extends LivewireDatatable
 |**exportCallback**| Closure $callback | Reformats the result when exporting | _(see below)_ |
 |**excludeFromExport**| | Excludes the column from export |```Column::name('email')->excludeFromExport()```|
 |**unsortable**| | Prevents the column being sortable |```Column::name('email')->unsortable()```|
+|**headerAttributes**|*Array* $attributes|Adds properties with their attributes in the div tag of column header. Useful for using with your custom js script or 3rd party js libraries (tourguidejs, ...) |```Column::name('email')->headerAttributes(['id' => 'custom_email_id', 'data-custom' => 'Custom Entry for using in js script for example'])```|
 ___
 
 ### Listener
