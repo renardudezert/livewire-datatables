@@ -351,10 +351,10 @@ class Column
         return $this;
     }
 
-    public function view($view)
+    public function view($view, $data = [])
     {
-        $this->callback = function ($value, $row) use ($view) {
-            return view($view, ['value' => $value, 'row' => $row]);
+        $this->callback = function ($value, $row) use ($view, $data) {
+            return view($view, ['value' => $value, 'row' => $row, ...$data]);
         };
 
         $this->exportCallback = function ($value) {
@@ -462,7 +462,7 @@ class Column
 
     public function isBaseColumn()
     {
-        return ! Str::contains($this->name, '.') && ! $this->raw;
+        return ! Str::startsWith($this->name, 'callback_') && ! Str::contains($this->name, '.') && ! $this->raw;
     }
 
     public function field()
