@@ -727,11 +727,11 @@ class LivewireDatatable extends Component
                 break;
 
             case is_array($column['select']):
-                return Str::before($column['select'][0], ' AS ');
+                return Str::before($column['select'][0]->getValue(DB::connection()->getQueryGrammar()), ' AS ');
                 break;
 
             case $column['select']:
-                return Str::before($column['select'], ' AS ');
+                return Str::before($column['select']->getValue(DB::connection()->getQueryGrammar()), ' AS ');
                 break;
 
             default:
@@ -1356,10 +1356,13 @@ class LivewireDatatable extends Component
                             foreach ($this->getColumnFilterStatement($i) as $column) {
                                 $query->when(is_array($column), function ($query) use ($search, $column) {
                                     foreach ($column as $col) {
-                                        $query->orWhereRaw('LOWER(' . (Str::contains(mb_strtolower($column), 'concat') ? '' : $this->tablePrefix) . $col . ') like ?', '%' . mb_strtolower($search) . '%');
+                                        $query->orWhereRaw('LOWER(' . (Str::contains(mb_strtolower($column->getValue(DB::connection()->getQueryGrammar())), 'concat') ? '' : $this->tablePrefix) . $col . ') like ?', '%' . mb_strtolower($search) . '%');
                                     }
                                 }, function ($query) use ($search, $column) {
-                                    $query->orWhereRaw('LOWER(' . (Str::contains(mb_strtolower($column), 'concat') ? '' : $this->tablePrefix) . $column . ') like ?', '%' . mb_strtolower($search) . '%');
+                                    $stringColumn = is_string($column)
+                                        ? $column
+                                        : $column->getValue(DB::connection()->getQueryGrammar());
+                                    $query->orWhereRaw('LOWER(' . (Str::contains(mb_strtolower($stringColumn), 'concat') ? '' : $this->tablePrefix) . $stringColumn . ') like ?', '%' . mb_strtolower($search) . '%');
                                 });
                             }
                         });
@@ -1477,7 +1480,10 @@ class LivewireDatatable extends Component
                             $query->orWhere(function ($query) use ($index, $value) {
                                 foreach ($this->getColumnFilterStatement($index) as $column) {
                                     $column = is_array($column) ? $column[0] : $column;
-                                    $query->orWhereRaw('LOWER(' . $this->tablePrefix . $column . ') like ?', [mb_strtolower("%$value%")]);
+                                    $columnString = is_string($column)
+                                        ? $column
+                                        : $column->getValue(DB::connection()->getQueryGrammar());
+                                    $query->orWhereRaw('LOWER(' . $this->tablePrefix . $columnString . ') like ?', [mb_strtolower("%$value%")]);
                                 }
                             });
                         }
