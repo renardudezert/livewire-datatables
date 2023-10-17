@@ -731,7 +731,10 @@ class LivewireDatatable extends Component
                 break;
 
             case $column['select']:
-                return Str::before($column['select']->getValue(DB::connection()->getQueryGrammar()), ' AS ');
+                $stringColumn = is_string($column['select'])
+                                        ? $column['select']
+                                        : $column['select']->getValue(DB::connection()->getQueryGrammar());
+                return Str::before($stringColumn, ' AS ');
                 break;
 
             default:
